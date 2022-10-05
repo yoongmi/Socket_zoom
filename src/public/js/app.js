@@ -3,9 +3,18 @@ const messageList = document.querySelector("ul");
 const messageForm = document.querySelector("form#message");
 const nickForm = document.querySelector("form#nickname");
 
+//nickname_all
+function nicknameAll(name) {
+  const li = document.createElement("li");
+  li.className = "all";
+  li.innerHTML = `<b>${name}</b> joined this room`;
+  messageList.append(li);
+}
+
 //socket event
 socket.addEventListener("open", () => {
   console.log("Connected to Server ✅");
+  nicknameAll("Anon");
 });
 
 socket.addEventListener("message", (message) => {
@@ -42,7 +51,9 @@ function handleNickSubmit(event) {
   event.preventDefault();
   const input = nickForm.querySelector("input");
   socket.send(makeMessage("nickname", input.value));
-  input.setAttribute("placeholder", `Your nick name is ${input.value}`);
+  nickForm.querySelector(
+    "p"
+  ).innerHTML = `Your nickname is <b>${input.value}</b>🌟`;
   input.value = "";
 }
 

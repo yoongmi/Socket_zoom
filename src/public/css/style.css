@@ -1,0 +1,43 @@
+body {
+  background-color: #1d1e1f;
+  color: #fff;
+}
+main form {
+  background-color: #2b2b33;
+  box-shadow: none;
+  padding: 10px 20px;
+  border: 0 none;
+}
+form div {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+form button {
+  padding: 6px 15px;
+  margin-left: 5px;
+  background-color: #6c71c4;
+  border: 0 none;
+}
+form input {
+  margin-bottom: 0;
+  background-color: #bebebe;
+  border: 0 none;
+}
+form p {
+  max-width: 100%;
+}
+
+ul {
+  background-color: #2b2b33;
+  box-shadow: none;
+  padding: 10px 20px;
+  border: 0 none;
+  min-height: 100px;
+  border-radius: 5px;
+  list-style: none;
+}
+ul li.all {
+  text-align: center;
+}

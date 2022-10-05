@@ -5,17 +5,21 @@ html(lang="en")
         meta(http-equiv="X-UA-Compatible", content="IE=edge")
         meta(name="viewport", content="width=device-width, initial-scale=1.0")
         link(rel="stylesheet", href="https://unpkg.com/mvp.css")
+        link(rel="stylesheet", href="/public/css/style.css")
         title Zoom
     body 
         header
             h1 Zoom
         main 
             form#nickname
-                input(type="text",placeholder="choose a nickname", required)
-                button save
+                p Your nickname is Anon 
+                div
+                    input(type="text",placeholder="choose a nickname", required)
+                    button save
             ul
             form#message
-                input(type="text",placeholder="write a msg", required)
-                button send
+                div
+                    input(type="text",placeholder="write a msg", required)
+                    button send
         
         script(src="/public/js/app.js")
