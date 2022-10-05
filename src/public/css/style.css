@@ -2,25 +2,34 @@ body {
   background-color: #1d1e1f;
   color: #fff;
 }
+main {
+  padding-top: 0;
+}
+input[type="text"],
+textarea {
+  width: auto;
+}
 main form {
+  max-width: 100%;
+  display: flex;
+  align-items: center;
+  flex-grow: 1;
+  justify-content: center;
   background-color: #2b2b33;
   box-shadow: none;
   padding: 10px 20px;
   border: 0 none;
 }
-form div {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
 
 form button {
+  flex-grow: 1;
   padding: 6px 15px;
   margin-left: 5px;
   background-color: #6c71c4;
   border: 0 none;
 }
 form input {
+  flex-grow: 5;
   margin-bottom: 0;
   background-color: #bebebe;
   border: 0 none;
@@ -37,7 +46,37 @@ ul {
   min-height: 100px;
   border-radius: 5px;
   list-style: none;
+  overflow-y: auto;
 }
-ul li.all {
+ul li {
+  width: auto;
+  clear: both;
+}
+ul li + li {
+  margin-top: 5px;
+}
+ul li.you {
+  float: right;
+}
+ul li.other {
+  margin-top: 30px;
+  float: left;
+  position: relative;
+}
+ul li.other b {
+  position: absolute;
+  top: -25px;
+  left: 0;
+}
+ul li.you,
+ul li.other {
+  padding: 5px 20px;
+  background-color: #6c71c3;
+  border-radius: 5px;
+}
+ul li.notice {
   text-align: center;
+  font-weight: bold;
+  color: #fff;
+  border-bottom: 1px solid #fff;
 }

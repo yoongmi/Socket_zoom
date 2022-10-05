@@ -1,7 +1,7 @@
 import http from "http";
-import WebSocket from "ws";
+import { Server } from "socket.io";
 import express from "express";
-import { SocketAddress } from "net";
+import { instrument } from "@socket.io/admin-ui";
 
 // express 어플리케이션 구성
 const app = express();
@@ -19,31 +19,73 @@ app.get("/*", (req, res) => res.redirect("/")); //catchall url (다른url 사용
 const handleListen = () => console.log(`Listening on http://localhost:3000`);
 
 // http,websocket 서버 두개 만듬.
-const server = http.createServer(app); //http 서버
-const wss = new WebSocket.Server({ server }); //websocket 서버
+const httpServer = http.createServer(app); //http 서버
+const wsServer = new Server(httpServer, {
+  cors: {
+    origin: ["https://admin.socket.io"],
+    credentials: true,
+  },
+});
+instrument(wsServer, {
+  auth: false,
+});
 
-const allSockets = [];
-
-// websocket 서버에 연결되었을 떄.
-wss.on("connection", (socket) => {
-  allSockets.push(socket);
-  allSockets["nickname"] = "anon"; // 닉네임 정하지 않았을때.
-  console.log("Connected to Browser ✅");
-  socket.on("close", () => console.log("Connected to Browser ❌"));
-
-  socket.on("message", (msg) => {
-    const message = JSON.parse(msg.toString());
-    switch (message.type) {
-      case "new_message": //메세지 추가.
-        allSockets.forEach((aSocket) =>
-          aSocket.send(`${allSockets.nickname}:${message.payload}`)
-        );
-        break;
-      case "nickname": //닉네임 변경
-        allSockets["nickname"] = message.payload;
-        break;
+// publicRoom 만들기
+function publicRooms() {
+  const { sids, rooms } = wsServer.sockets.adapter;
+  const publicRooms = [];
+  rooms.forEach((_, key) => {
+    if (sids.get(key) === undefined) {
+      publicRooms.push(key);
     }
+  });
+  return publicRooms;
+}
+
+// room 안에 user 수 세기
+function countRoom(roomName) {
+  return wsServer.sockets.adapter.rooms.get(roomName)?.size;
+}
+
+// 서버 연결되었을때.
+wsServer.on("connection", (socket) => {
+  socket["nickname"] = "Anon";
+  wsServer.sockets.emit("room_change", publicRooms());
+  socket.onAny((event) => {
+    console.log(wsServer.sockets.adapter);
+    console.log(`Socket Event:${event}`);
+  });
+
+  //방에 입장할때.
+  socket.on("enter_room", (roomName, done) => {
+    socket.join(roomName);
+    done();
+  });
+
+  //연결이 끊어졌을때.
+  socket.on("disconnecting", () => {
+    socket.rooms.forEach((room) =>
+      socket.to(room).emit("bye", socket.nickname, countRoom(room) - 1)
+    );
+  });
+
+  //연결이 끊어지고나서.
+  socket.on("disconnect", () => {
+    wsServer.sockets.emit("room_change", publicRooms());
+  });
+
+  //새로운 메세지 입력했을때.
+  socket.on("new_message", (msg, room, done) => {
+    socket.to(room).emit("new_message", `<b>${socket.nickname}</b>${msg}`);
+    done();
+  });
+
+  //닉네임 입력했을때.
+  socket.on("nickname", (nickname, roomName) => {
+    socket["nickname"] = nickname;
+    socket.to(roomName).emit("welcome", socket.nickname, countRoom(roomName));
+    wsServer.sockets.emit("room_change", publicRooms());
   });
 });
 
-server.listen(80, handleListen);
+httpServer.listen(3000, handleListen);
