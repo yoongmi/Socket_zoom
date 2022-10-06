@@ -49,6 +49,7 @@ function countRoom(roomName) {
 
 // 서버 연결되었을때.
 wsServer.on("connection", (socket) => {
+  /*
   socket["nickname"] = "Anon";
   wsServer.sockets.emit("room_change", publicRooms());
   socket.onAny((event) => {
@@ -85,6 +86,22 @@ wsServer.on("connection", (socket) => {
     socket["nickname"] = nickname;
     socket.to(roomName).emit("welcome", socket.nickname, countRoom(roomName));
     wsServer.sockets.emit("room_change", publicRooms());
+  });
+  */
+
+  //비디오
+  socket.on("join_room", (roomName) => {
+    socket.join(roomName);
+    socket.to(roomName).emit("welcome");
+  });
+  socket.on("offer", (offer, roomName) => {
+    socket.to(roomName).emit("offer", offer);
+  });
+  socket.on("answer", (answer, roomName) => {
+    socket.to(roomName).emit("answer", answer);
+  });
+  socket.on("ice", (ice, roomName) => {
+    socket.to(roomName).emit("ice", ice);
   });
 });
 

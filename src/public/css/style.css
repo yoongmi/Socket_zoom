@@ -80,3 +80,20 @@ ul li.notice {
   color: #fff;
   border-bottom: 1px solid #fff;
 }
+
+.video_box {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+video {
+  width: 45%;
+  height: auto;
+}
+#myStream button {
+  flex-grow: 1;
+  padding: 6px 15px;
+  margin-left: 5px;
+  background-color: #6c71c4;
+  border: 0 none;
+}
