@@ -116,14 +116,16 @@ async function initCall() {
 
 async function handleWelcomeSubmit(event) {
   event.preventDefault();
-  const input = welcomeForm.querySelector("input");
+  const inputRoom = welcomeForm.querySelector("input.roomName");
+  const inputNick = welcomeForm.querySelector("input.nickName");
   await initCall();
-  socket.emit("join_room", input.value);
-  roomName = input.value;
-  input.value = "";
+  socket.emit("join_room", inputRoom.value);
+  roomName = inputRoom.value;
+  roomTitle.innerText = `Room ${inputRoom.value}`;
+  socket.emit("nickname", inputRoom.value, inputNick.value);
+  inputRoom.value = "";
 
-  roomTitle.innerText = `Room ${input.value}`;
-  chatting(`I Join!`, "notice");
+  chatting(`${inputNick.value} Join!`, "notice");
 }
 
 welcomeForm.addEventListener("submit", handleWelcomeSubmit);
@@ -159,22 +161,24 @@ socket.on("room_change", (rooms) => {
     return;
   }
   rooms.forEach((room) => {
-    roomList.clear();
     const li = document.createElement("li");
-    li.innerText = rooms;
+    li.innerText = room;
     roomList.append(li);
   });
 });
 
 // socket code
 socket.on("welcome", async () => {
-  chatting(`You Join!`, "notice");
   myDataChannel = myPeerConnection.createDataChannel("chat");
   myDataChannel.addEventListener("message", (event) => chatting(event.data));
 
   const offer = await myPeerConnection.createOffer();
   myPeerConnection.setLocalDescription(offer);
   socket.emit("offer", offer, roomName);
+});
+
+socket.on("nickname", (name) => {
+  chatting(`${name} Join!`, "notice");
 });
 
 socket.on("offer", async (offer) => {

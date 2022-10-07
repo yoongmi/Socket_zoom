@@ -20,11 +20,9 @@ main form {
   padding: 10px 20px;
   border: 0 none;
 }
-
 form button {
   flex-grow: 1;
-  padding: 6px 15px;
-  margin-left: 5px;
+  padding: 5px 15px;
   background-color: #6c71c4;
   border: 0 none;
 }
@@ -33,6 +31,11 @@ form input {
   margin-bottom: 0;
   background-color: #bebebe;
   border: 0 none;
+  margin-right: 5px;
+}
+form input.nickName {
+  width: 150px;
+  flex-grow: 0;
 }
 form p {
   max-width: 100%;
