@@ -23,7 +23,7 @@ main form {
 form button {
   flex-grow: 1;
   padding: 5px 15px;
-  background-color: #6c71c4;
+  background-color: #dc6175;
   border: 0 none;
 }
 form input {
@@ -74,7 +74,7 @@ ul li.other b {
 ul li.you,
 ul li.other {
   padding: 5px 20px;
-  background-color: #6c71c3;
+  background-color: #dc6175;
   border-radius: 5px;
 }
 ul li.notice {
@@ -89,14 +89,17 @@ ul li.notice {
   justify-content: space-between;
   align-items: center;
 }
+.video_box div {
+  width: 48%;
+}
 video {
-  width: 45%;
+  width: 100%;
   height: auto;
 }
 #myStream button {
   flex-grow: 1;
   padding: 6px 15px;
   margin-left: 5px;
-  background-color: #6c71c4;
+  background-color: #dc6175;
   border: 0 none;
 }

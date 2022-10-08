@@ -21,8 +21,12 @@ html(lang="en")
                 div#myStream 
                     h3
                     div.video_box
-                        video#myFace(autoplay,playsinline,width="400",height="400")
-                        video#peerFace(autoplay,playsinline,width="400",height="400")
+                        div 
+                            video#myFace(autoplay,playsinline,width="400",height="400")
+                            p#myName 
+                        div 
+                            video#peerFace(autoplay,playsinline,width="400",height="400")
+                            p#peerName
                     button#mute Mute
                     button#camera Turn Camera Off
                     select#cameras

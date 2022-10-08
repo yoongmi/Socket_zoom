@@ -51,13 +51,13 @@ function countRoom(roomName) {
 wsServer.on("connection", (socket) => {
   wsServer.sockets.emit("room_change", publicRooms());
   //비디오
-  socket.on("join_room", (roomName) => {
+  socket.on("join_room", (roomName, nickname) => {
     socket.join(roomName);
-    socket.to(roomName).emit("welcome");
+    socket.to(roomName).emit("welcome", nickname);
     wsServer.sockets.emit("room_change", publicRooms());
   });
-  socket.on("offer", (offer, roomName) => {
-    socket.to(roomName).emit("offer", offer);
+  socket.on("offer", (offer, roomName, nickname) => {
+    socket.to(roomName).emit("offer", offer, nickname);
   });
   socket.on("answer", (answer, roomName) => {
     socket.to(roomName).emit("answer", answer);
