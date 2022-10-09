@@ -102,6 +102,8 @@ const welcome = document.getElementById("welcome");
 const call = document.getElementById("call");
 welcomeForm = welcome.querySelector("form");
 const roomTitle = call.querySelector("h3");
+const myName = document.getElementById("myName");
+const peerName = document.getElementById("peerName");
 
 let roomName;
 
@@ -121,7 +123,8 @@ async function handleWelcomeSubmit(event) {
   await initCall();
   socket.emit("join_room", inputRoom.value, inputNick.value);
   roomName = inputRoom.value;
-  roomTitle.innerText = `Room ${inputRoom.value}`;
+  roomTitle.innerText = `Room ${roomName} (1)`;
+  myName.innerText = inputNick.value;
   socket.emit("nickname", inputRoom.value, inputNick.value);
   inputRoom.value = "";
 
@@ -168,29 +171,32 @@ socket.on("room_change", (rooms) => {
 });
 
 // socket code
-socket.on("welcome", async (nickname) => {
+socket.on("welcome", async (nickname, roomname, count) => {
   myDataChannel = myPeerConnection.createDataChannel("chat");
   myDataChannel.addEventListener("message", (event) =>
     chatting(`<b>${nickname}</b>${event.data}`, "other")
   );
 
+  roomTitle.innerText = `Room ${roomname} (${count})`;
+  peerName.innerText = nickname;
   const offer = await myPeerConnection.createOffer();
   myPeerConnection.setLocalDescription(offer);
-  socket.emit("offer", offer, roomName, nickname);
+  socket.emit("offer", offer, roomName, count);
 });
 
 socket.on("nickname", (name) => {
   chatting(`${name} Join!`, "notice");
 });
 
-socket.on("offer", async (offer, nickname) => {
+socket.on("offer", async (offer, nickname, count) => {
   myPeerConnection.addEventListener("datachannel", (event) => {
     myDataChannel = event.channel;
     myDataChannel.addEventListener("message", (event) =>
       chatting(`<b>${nickname}</b>${event.data}`, "other")
     );
   });
-
+  peerName.innerText = nickname;
+  roomTitle.innerText = `Room ${roomName} (${count})`;
   myPeerConnection.setRemoteDescription(offer);
   const answer = await myPeerConnection.createAnswer();
   myPeerConnection.setLocalDescription(answer);
@@ -203,6 +209,14 @@ socket.on("answer", (answer) => {
 
 socket.on("ice", (ice) => {
   myPeerConnection.addIceCandidate(ice);
+});
+
+socket.on("bye", (leftUser, newCount) => {
+  roomTitle.innerText = `Room ${roomName} (${newCount})`;
+  chatting(`${leftUser} left!`, "notice");
+  peerName.innerText = "";
+  const peerFace = document.getElementById("peerFace");
+  peerFace.srcObject = null;
 });
 
 // RTC code

@@ -91,8 +91,20 @@ ul li.notice {
 }
 .video_box div {
   width: 48%;
+  position: relative;
+}
+.video_box p {
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  width: 100%;
+  text-align: center;
+  background-color: rgba(0, 0, 0, 0.5);
+  margin: 0;
+  line-height: 2;
 }
 video {
+  display: block;
   width: 100%;
   height: auto;
 }
@@ -102,4 +114,17 @@ video {
   margin-left: 5px;
   background-color: #dc6175;
   border: 0 none;
+}
+.cardBox {
+  display: flex;
+  align-items: baseline;
+  flex-wrap: wrap;
+}
+.cardBox li {
+  width: calc(25% - 4px);
+  margin: 2px;
+  padding: 3px 10px;
+  background-color: #dc6181;
+  box-sizing: border-box;
+  border-radius: 4px;
 }
